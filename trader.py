@@ -1,9 +1,13 @@
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup as BS
+import time
+import os
+from threading import Thread
 
-class future:
+class future(Thread):
     def __init__(self):
+        Thread.__init__(self)
         self.price_set = self.get_price()
 
     def get_price(self):
@@ -17,3 +21,7 @@ class future:
     def update_price(self):
         self.price_set = pd.concat([self.price_set, self.get_price()])
 
+    def run(self):
+        while self.price_set.iloc[-1]['狀態'] != '收盤':
+            self.update_price()
+            time.sleep(15)
