@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup as BS
 import time
 import os
 from threading import Thread
+from datetime import datetime
+import pickle
 
 class future(Thread):
     def __init__(self):
@@ -22,6 +24,13 @@ class future(Thread):
         self.price_set = pd.concat([self.price_set, self.get_price()])
 
     def run(self):
-        while self.price_set.iloc[-1]['狀態'] != '收盤':
+        current_time = datetime.strftime(datetime.now(),"%H:%M:%S")
+        end_time = "13:45:00"
+        while current_time < end_time:
             self.update_price()
             time.sleep(15)
+        pickle.dump(self.price_set, open('./history/' + datetime.strftime(datetime.now(),"%Y_%m_%d")) + 'pkl')
+
+if __name__ == "__main__":
+    fut = future()
+    future.start()
