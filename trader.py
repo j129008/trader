@@ -29,8 +29,8 @@ class future(Thread):
         while current_time < end_time:
             self.update_price()
             time.sleep(15)
-        pickle.dump(self.price_set, open('./history/' + datetime.strftime(datetime.now(),"%Y_%m_%d")) + 'pkl')
+        pickle.dump(self.price_set, open('./history/' + datetime.strftime(datetime.now(),"%Y_%m_%d") + '.pkl', 'wb'))
 
 if __name__ == "__main__":
     fut = future()
-    future.start()
+    fut.start()
