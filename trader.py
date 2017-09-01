@@ -19,7 +19,6 @@ class future(Thread):
         soup = BS(resfut.text,"lxml")
         table = pd.read_html(str(soup.select('#divDG')[0]),index_col=0,header=0)[0]
         price = table.filter(regex='^小臺指期0|^小臺指期1', axis=0).iloc[0:1]
-        print( price )
         return price
 
     def update_price(self):
