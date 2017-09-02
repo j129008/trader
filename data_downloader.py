@@ -12,7 +12,6 @@ class fut_data:
             urllib.request.urlretrieve(self.url + file_name, self.folder + file_name)
         else:
             print('is weekend')
-            urllib.request.urlretrieve(self.url + file_name, self.folder + file_name)
 
 if __name__ == '__main__':
     fut = fut_data('/home/vodo/trader/history/')
