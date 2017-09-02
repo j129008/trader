@@ -1,8 +1,6 @@
 from datetime import date, timedelta
 import urllib.request
 from pathlib import Path
-import zipfile
-from glob import glob
 
 class fut_data:
     def __init__(self, data_location):
