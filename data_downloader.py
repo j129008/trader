@@ -2,6 +2,7 @@ from datetime import date, timedelta
 import urllib.request
 from pathlib import Path
 from zipfile import ZipFile
+import os
 
 class fut_data:
     def __init__(self, data_location):
@@ -10,14 +11,17 @@ class fut_data:
         self.folder = data_location
     def past_day(self, day):
         past_day = self.today - timedelta(days=day)
-        file_name = past_day.strftime('%Y_%0m_%0d') + '.zip'
+        file_date = past_day.strftime('%Y_%0m_%0d')
+        file_name = file_date + '.zip'
         file_path = Path(self.folder + file_name)
-        if file_path.exists(): return 'file exist'
+        csv_path = Path(self.folder + 'Daily_' + file_date + '.csv')
+        if csv_path.exists(): return 'csv exist'
         if past_day.isoweekday() in [6, 7]: return 'is weekend'
         urllib.request.urlretrieve(self.url + file_name, self.folder + file_name)
         zip_file = ZipFile(str(file_path.absolute()), 'r')
         zip_file.extractall(self.folder)
         zip_file.close()
+        os.remove(str(file_path.absolute()))
         return 'save ' + file_name + ' success'
 
 if __name__ == '__main__':
