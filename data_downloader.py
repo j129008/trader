@@ -1,6 +1,19 @@
-from datetime import datetime
+from datetime import date, timedelta
 import urllib.request
 
-today = str( datetime.strftime(datetime.now(),"%Y_%2m_%2d") )
-url = 'http://www.taifex.com.tw/DailyDownload/DailyDownloadCSV/Daily_'+ today +'.zip'
-urllib.request.urlretrieve(url, '/home/vodo/trader/history/' + today + '.zip')
+class fut_data:
+    def __init__(self, data_location):
+        self.url = 'http://www.taifex.com.tw/DailyDownload/DailyDownloadCSV/Daily_'
+        self.today = date.today()
+        self.folder = data_location
+    def get_today(self):
+        file_name = self.today.strftime('%Y_%0m_%0d') + '.zip'
+        if self.today.isoweekday() not in [6, 7]:
+            urllib.request.urlretrieve(self.url + file_name, self.folder + file_name)
+        else:
+            print('is weekend')
+            urllib.request.urlretrieve(self.url + file_name, self.folder + file_name)
+
+if __name__ == '__main__':
+    fut = fut_data('/home/vodo/trader/history/')
+    fut.get_today()
