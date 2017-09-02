@@ -1,6 +1,8 @@
 from datetime import date, timedelta
 import urllib.request
 from pathlib import Path
+import zipfile
+from glob import glob
 
 class fut_data:
     def __init__(self, data_location):
@@ -11,16 +13,12 @@ class fut_data:
         past_day = self.today - timedelta(days=day)
         file_name = past_day.strftime('%Y_%0m_%0d') + '.zip'
         file_path = Path(self.folder + file_name)
-        if not file_path.exists():
-            if past_day.isoweekday() not in [6, 7]:
-                urllib.request.urlretrieve(self.url + file_name, self.folder + file_name)
-                print('save ' + file_name + ' success')
-            else:
-                print('is weekend')
-        else:
-            print('file exist')
+        if not file_path.exists(): return 'file exist'
+        if past_day.isoweekday() in [6, 7]: return 'is weekend'
+        urllib.request.urlretrieve(self.url + file_name, self.folder + file_name)
+        return 'save ' + file_name + ' success'
 
 if __name__ == '__main__':
     fut = fut_data('/home/vodo/trader/history/')
     for i in range(30):
-        fut.past_day(i)
+        print(fut.past_day(i))
