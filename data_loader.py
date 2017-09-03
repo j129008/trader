@@ -27,17 +27,16 @@ class fut_load:
     def set_time(self):
         time_list = [ ele for ele in self.data['成交時間'] ]
         time_cnt = Counter(time_list)
-        new_time_list = []
+        time_group = []
         for time in set(time_list):
-            new_time_list.append( [time] * time_cnt[time] )
+            time_group.append( [time] * time_cnt[time] )
 
-        for i in range(len(new_time_list)):
-            self.time_split(new_time_list[i])
-        new_time_list2 = []
-        for ele in new_time_list:
-            new_time_list2 += ele
-        new_time_list2 = sorted(new_time_list2)
-        self.data['成交時間'] = new_time_list2
+        for i in range(len(time_group)):
+            self.time_split(time_group[i])
+        new_time_list = []
+        for group in time_group:
+            new_time_list += group
+        self.data['成交時間'] = sorted(new_time_list)
 
 if __name__ == '__main__':
     path_list = glob('./history/*.csv')
