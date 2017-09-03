@@ -11,9 +11,12 @@ class fut_load:
         self.trade_date = datetime.datetime.strptime(file_name, 'Daily_%Y_%m_%d.csv').date()
         self.data = pd.read_csv(data_path, encoding='big5')
         self.data['商品代號'] = self.data['商品代號'].str.strip()
+        self.data['到期月份(週別)'] = self.data['到期月份(週別)'].str.strip()
+        cur_month = self.data['到期月份(週別)'].unique().tolist()[0]
         self.data = self.data.loc[self.data['商品代號'] == 'MTX']
         self.data = self.data.loc[self.data['成交日期'] == int(self.trade_date.strftime('%Y%m%d'))]
         self.data = self.data.loc[self.data['成交價格'] > 0]
+        self.data = self.data.loc[self.data['到期月份(週別)'] == cur_month]
         self.data = self.data.loc[self.data['成交時間'] >= 84500]
         self.set_time()
 
