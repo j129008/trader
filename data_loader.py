@@ -13,6 +13,7 @@ class fut_load:
         self.data = self.data.loc[self.data['商品代號'] == 'MTX']
         self.data = self.data.loc[self.data['成交日期'] == self.trade_date]
         self.data = self.data.loc[self.data['成交價格'] > 0]
+        self.data = self.data.loc[self.data['成交時間'] >= 84500]
         self.set_time()
 
     def time_split(self, time_list):
