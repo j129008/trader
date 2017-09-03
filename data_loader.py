@@ -25,6 +25,11 @@ class fut_load:
             time_list[i] += i*delta
         return time_list
 
+    def digit2time(self, digit_time):
+        time = datetime.datetime.strptime(str(int(digit_time)), '%H%M%S').time()
+        time.replace(microsecond=int( (digit_time%1)*1000000 ))
+        return time
+
     def set_time(self):
         time_list = [ ele for ele in self.data['成交時間'] ]
         time_cnt = Counter(time_list)
@@ -36,7 +41,7 @@ class fut_load:
             self.time_split(time_group[i])
         new_time_list = []
         for group in time_group:
-            new_time_list += group
+            new_time_list += [ datetime.datetime.combine(self.trade_date, self.digit2time(digit)) for digit in group ]
         self.data['成交時間'] = sorted(new_time_list)
 
 if __name__ == '__main__':
