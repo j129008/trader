@@ -3,15 +3,16 @@ from collections import Counter
 from pathlib import Path
 import re
 from glob import glob
+import datetime
 
 class fut_load:
     def __init__(self, data_path):
         file_name = Path(data_path).name
-        self.trade_date = int(re.sub('[A-z_\.]', '', file_name))
+        self.trade_date = datetime.datetime.strptime(file_name, 'Daily_%Y_%m_%d.csv').date()
         self.data = pd.read_csv(data_path, encoding='big5')
         self.data['商品代號'] = self.data['商品代號'].str.strip()
         self.data = self.data.loc[self.data['商品代號'] == 'MTX']
-        self.data = self.data.loc[self.data['成交日期'] == self.trade_date]
+        self.data = self.data.loc[self.data['成交日期'] == int(self.trade_date.strftime('%Y%m%d'))]
         self.data = self.data.loc[self.data['成交價格'] > 0]
         self.data = self.data.loc[self.data['成交時間'] >= 84500]
         self.set_time()
