@@ -1,2 +1,2 @@
-45  8 * * 1-5 /usr/bin/python3 /home/vodo/trader/trader.py > /tmp/cron.log 2>&1 # time to trade
+45  8 * * 1-5 /usr/bin/python3 /home/vodo/trader/trader.py >> /tmp/cron.log 2>&1 # time to trade
  0 16 * * 1-5 /usr/bin/python3 /home/vodo/trader/data_downloader.py > /tmp/dwn.log 2>&1 # time to get data
