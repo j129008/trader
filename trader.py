@@ -28,11 +28,18 @@ class future(Thread):
         current_time = datetime.strftime(datetime.now(),"%H:%M:%S")
         end_time = "13:45:15"
         start_time = '08:45:00'
+        print('market open ' + current_time)
         while start_time < current_time < end_time:
             self.update_price()
             time.sleep(15)
             pickle.dump(self.price_set, open('/home/vodo/trader/history/' + datetime.strftime(datetime.now(),"%Y_%m_%d") + '.pkl', 'wb'))
+            trade_time = datetime.strftime(datetime.now(),"%H:%M:%S")
+            print('trade time: ' + trade_time)
+        end_time = datetime.strftime(datetime.now(),"%H:%M:%S")
+        print('market close: ' + end_time)
+        return 0
 
 if __name__ == "__main__":
     fut = future()
     fut.start()
+    print('proc exit')
