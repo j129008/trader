@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 import urllib3
 from pathlib import Path
-from zipfile import ZipFile
+from zipfile import ZipFile, is_zipfile
 import os
 
 class fut_data:
@@ -20,14 +20,18 @@ class fut_data:
         http = urllib3.PoolManager()
         r = http.request('GET', self.url + file_name)
         if r.status == 200:
-            fout = open(self.folder + file_name, 'wb')
+            fout = open(str(file_path.absolute()), 'wb')
             fout.write(r.data)
-            zip_file = ZipFile(str(file_path.absolute()), 'r')
-            zip_file.extractall(self.folder)
-            zip_file.close()
-            os.remove(str(file_path.absolute()))
+            if is_zipfile(str(file_path.absolute())):
+                zip_file = ZipFile(str(file_path.absolute()), 'r')
+                zip_file.extractall(self.folder)
+                zip_file.close()
+                os.remove(str(file_path.absolute()))
+            else:
+                os.remove(str(file_path.absolute()))
+                return 'not zipfile'
         else:
-            print('http error')
+            return 'http error'
         return 'save ' + file_name + ' success'
 
 if __name__ == '__main__':
