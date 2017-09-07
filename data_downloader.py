@@ -1,5 +1,5 @@
 from datetime import date, timedelta
-import urllib.request
+import urllib3
 from pathlib import Path
 from zipfile import ZipFile
 import os
@@ -17,11 +17,17 @@ class fut_data:
         csv_path = Path(self.folder + 'Daily_' + file_date + '.csv')
         if csv_path.exists(): return 'csv exist'
         if past_day.isoweekday() in [6, 7]: return 'is weekend'
-        urllib.request.urlretrieve(self.url + file_name, self.folder + file_name)
-        zip_file = ZipFile(str(file_path.absolute()), 'r')
-        zip_file.extractall(self.folder)
-        zip_file.close()
-        os.remove(str(file_path.absolute()))
+        http = urllib3.PoolManager()
+        r = http.request('GET', self.url + file_name)
+        if r.status == 200:
+            fout = open(self.folder + file_name, 'wb')
+            fout.write(r.data)
+            zip_file = ZipFile(str(file_path.absolute()), 'r')
+            zip_file.extractall(self.folder)
+            zip_file.close()
+            os.remove(str(file_path.absolute()))
+        else:
+            print('http error')
         return 'save ' + file_name + ' success'
 
 if __name__ == '__main__':
