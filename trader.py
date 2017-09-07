@@ -42,4 +42,5 @@ class future(Thread):
 if __name__ == "__main__":
     fut = future()
     fut.start()
+    fut.join()
     print('proc exit: ' + datetime.now().isoformat())
