@@ -1,7 +1,7 @@
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup as BS
-import time
+from time import sleep
 import os
 from threading import Thread
 from datetime import datetime, time
@@ -25,13 +25,12 @@ class future(Thread):
         self.price_set = pd.concat([self.price_set, self.get_price()])
 
     def run(self):
-        current_time = datetime.now().time()
-        end_time = time( 13, 45, 15 )
-        start_time = time( 8, 45, 00 )
+        start_time = time( 8, 44, 00 )
+        end_time = time( 13, 45, 30 )
         print('market open: ' + datetime.now().isoformat())
-        while start_time < current_time < end_time:
+        while start_time < datetime.now().time() < end_time:
             self.update_price()
-            time.sleep(15)
+            sleep(15)
             pickle.dump(self.price_set, open('/home/vodo/trader/history/' + datetime.strftime(datetime.now(),"%Y_%m_%d") + '.pkl', 'wb'))
             trade_time = datetime.now().time()
             print('trade time: ' + trade_time.isoformat())
