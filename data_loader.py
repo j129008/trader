@@ -12,13 +12,25 @@ class fut_load:
         self.data = pd.read_csv(data_path, encoding='big5')
         self.data['商品代號'] = self.data['商品代號'].str.strip()
         self.data['到期月份(週別)'] = self.data['到期月份(週別)'].str.strip()
-        cur_month = self.data['到期月份(週別)'].unique().tolist()[0]
         self.data = self.data.loc[self.data['商品代號'] == 'MTX']
         self.data = self.data.loc[self.data['成交日期'] == int(self.trade_date.strftime('%Y%m%d'))]
         self.data = self.data.loc[self.data['成交價格'] > 0]
-        self.data = self.data.loc[self.data['到期月份(週別)'] == cur_month]
+        self.data = self.data.loc[self.data['到期月份(週別)'] == self.trade_month()]
         self.data = self.data.loc[self.data['成交時間'] >= 84500]
         self.set_time()
+
+    def trade_month(self):
+        today = self.trade_date
+        day_delta = datetime.timedelta(days=1)
+        day_shift = self.trade_date
+        wed_cnt = 0
+        for i in range(today.day):
+            if day_shift.isoweekday() == 3:
+                wed_cnt += 1
+            day_shift -= day_delta
+        if wed_cnt >=2:
+            return datetime.date(today.year, today.month + 1, 1).strftime('%Y%m')
+        return datetime.date(today.year, today.month, 1).strftime('%Y%m')
 
     def time_split(self, time_list):
         if len(time_list) == 1:
