@@ -19,6 +19,8 @@ class future(Thread):
         soup = BS(resfut.text,"lxml")
         table = pd.read_html(str(soup.select('#divDG')[0]),index_col=0,header=0)[0]
         price = table.filter(regex='^小臺指期0|^小臺指期1', axis=0).iloc[0:1]
+        price['時間'] = [ datetime.strptime(time, '%H:%M:%S').time() for time in price['時間'] ]
+        price['成交價'] = pd.to_numeric(price['成交價'])
         return price
 
     def update_price(self):
